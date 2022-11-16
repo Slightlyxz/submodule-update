@@ -1,12 +1,8 @@
-# GitHub Action: Creates Pull Request when Submodules are Updated
+# GitHub Action: Creates a Commit when Submodules are Updated (Based on an [action doing the same, but creating a PR](https://github.com/releasehub-com/github-action-create-pr-parent-submodule))
 
-This GitHub action creates a new branch and pull request against the parent repository when submodules are updated
+This GitHub action creates a new commit against the parent repository when submodules are updated
 
-**The end goal of this tool:**
-
-- Create a new branch on the parent repository and get all submodules updates
-- Create a pull request from newly created branch
-- Add a custom label to the pull request
+**The end goal of this tool:** Automatically update the submodule in the parent repository.
 
 ## How to use
 
@@ -29,10 +25,7 @@ name: Submodule Updates
 # Start the job on all push #
 #############################
 on:
-  push:
-    branches-ignore: [master, main]
-  pull_request:
-    branches: [master, main]
+  push
 
 ###############
 # Set the Job #
@@ -43,9 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       PARENT_REPOSITORY: 'org/example-repository'
-      CHECKOUT_BRANCH: 'main'
-      PR_AGAINST_BRANCH: 'main'
-      OWNER: 'org'
+      PARENT_BRANCH: 'main'
 
     steps:
       ##########################
@@ -59,11 +50,9 @@ jobs:
       ####################################
       - name: run action
         id: run_action
-        uses: releasehub-com/github-action-create-pr-parent-submodule@v1
+        uses: PaulRitter/github-action-create-commit-parent-submodule@v1
         with:
           github_token: ${{ secrets.RELEASE_HUB_SECRET }}
           parent_repository: ${{ env.PARENT_REPOSITORY }}
-          checkout_branch: ${{ env.CHECKOUT_BRANCH}}
-          pr_against_branch: ${{ env.PR_AGAINST_BRANCH }}
-          owner: ${{ env.OWNER }}
+          parent_branch: ${{ env.PARENT_BRANCH}}
 ```
