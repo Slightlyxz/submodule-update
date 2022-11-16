@@ -1,5 +1,7 @@
 # GitHub Action: Creates a Commit when Submodule is Updated (Based on an [this action](https://github.com/releasehub-com/github-action-create-pr-parent-submodule))
 
+**Beware: this will update ALL submodules in the parent repository. I haven't had the motivation to figure out a way to only update the origin repository, due to that not being necessary for my workflow. I am accepting PR's tho.**
+
 This GitHub action creates a new commit against the parent repository when the submodule is updated.
 
 **The end goal of this tool:** Automatically update the submodule in the parent repository.
