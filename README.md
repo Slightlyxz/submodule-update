@@ -1,6 +1,6 @@
-# GitHub Action: Creates a Commit when Submodules are Updated (Based on an [action doing the same, but creating a PR](https://github.com/releasehub-com/github-action-create-pr-parent-submodule))
+# GitHub Action: Creates a Commit when Submodule is Updated (Based on an [this action](https://github.com/releasehub-com/github-action-create-pr-parent-submodule))
 
-This GitHub action creates a new commit against the parent repository when submodules are updated
+This GitHub action creates a new commit against the parent repository when the submodule is updated.
 
 **The end goal of this tool:** Automatically update the submodule in the parent repository.
 
@@ -21,38 +21,19 @@ This file should have the following code:
 ---
 name: Submodule Updates
 
-#############################
-# Start the job on all push #
-#############################
 on:
   push
 
-###############
-# Set the Job #
-###############
 jobs:
   build:
     name: Submodule update
     runs-on: ubuntu-latest
-    env:
-      PARENT_REPOSITORY: 'org/example-repository'
-      PARENT_BRANCH: 'main'
-
     steps:
-      ##########################
-      # Checkout the code base #
-      ##########################
-      - name: Checkout Code
-        uses: actions/checkout@v2
-
-      ####################################
-      # Run the action against code base #
-      ####################################
       - name: run action
         id: run_action
         uses: PaulRitter/github-action-create-commit-parent-submodule@v1
         with:
-          github_token: ${{ secrets.RELEASE_HUB_SECRET }}
-          parent_repository: ${{ env.PARENT_REPOSITORY }}
-          parent_branch: ${{ env.PARENT_BRANCH}}
+          github_token: ${{ secrets.GH_ACTIONS_TOKEN }}
+          parent_repository: org/example-repository
+          parent_branch: main
 ```
