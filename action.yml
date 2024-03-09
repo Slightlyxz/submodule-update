@@ -39,15 +39,16 @@ runs:
       SUBMODULES=$(git submodule status | awk '{print $2}')
       for SUBMODULE in $SUBMODULES
       do
-        if [ -d "$SUBMODULE" ]; then
-          cd $SUBMODULE
+        FULL_PATH="${GITHUB_WORKSPACE}/${SUBMODULE}"
+        if [ -d "$FULL_PATH" ]; then
+          cd $FULL_PATH
           NEW_COMMITS=$(git log --oneline origin/HEAD..HEAD)
-          cd ..
+          cd $GITHUB_WORKSPACE
           if [ -n "$NEW_COMMITS" ]; then
             git commit -am "updated submodule $SUBMODULE"
           fi
         else
-          echo "Directory $SUBMODULE does not exist"
+          echo "Directory $FULL_PATH does not exist"
         fi
       done
       git push
