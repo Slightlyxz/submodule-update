@@ -35,16 +35,17 @@ runs:
     run: |
       git config user.name "${GITHUB_ACTOR}"
       git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
-      git submodule update --remote
       SUBMODULES=$(git submodule status | awk '{print $2}')
       for SUBMODULE in $SUBMODULES
       do
         FULL_PATH="${GITHUB_WORKSPACE}/${SUBMODULE}"
         if [ -d "$FULL_PATH" ]; then
           cd $FULL_PATH
-          NEW_COMMITS=$(git log --oneline origin/HEAD..HEAD)
+          BEFORE_HEAD=$(git rev-parse HEAD)
+          git pull origin HEAD
+          AFTER_HEAD=$(git rev-parse HEAD)
           cd $GITHUB_WORKSPACE
-          if [ -n "$NEW_COMMITS" ]; then
+          if [ "$BEFORE_HEAD" != "$AFTER_HEAD" ]; then
             git commit -am "updated submodule $SUBMODULE"
           fi
         else
