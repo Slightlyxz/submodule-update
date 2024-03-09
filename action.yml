@@ -39,11 +39,15 @@ runs:
       SUBMODULES=$(git submodule status | awk '{print $2}')
       for SUBMODULE in $SUBMODULES
       do
-        cd $SUBMODULE
-        NEW_COMMITS=$(git log --oneline origin/HEAD..HEAD)
-        cd ..
-        if [ -n "$NEW_COMMITS" ]; then
-          git commit -am "updated submodule $SUBMODULE"
+        if [ -d "$SUBMODULE" ]; then
+          cd $SUBMODULE
+          NEW_COMMITS=$(git log --oneline origin/HEAD..HEAD)
+          cd ..
+          if [ -n "$NEW_COMMITS" ]; then
+            git commit -am "updated submodule $SUBMODULE"
+          fi
+        else
+          echo "Directory $SUBMODULE does not exist"
         fi
       done
       git push
