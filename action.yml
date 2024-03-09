@@ -30,11 +30,14 @@ runs:
       submodules: true
       fetch-depth: 0
 
+  - name: Set Git user name and email
+    run: |
+      git config user.name "$(git --no-pager show -s --format='%an')"
+      git config user.email "$(git --no-pager show -s --format='%ae')"
+
   - name: Create new commit and push changes
     shell: bash
     run: |
-      git config user.name github-actions
-      git config user.email github-actions@github.com
       git submodule update --remote
       git commit -am "updating submodules"
       git push
