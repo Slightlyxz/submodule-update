@@ -21,22 +21,20 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - name: Checkout parent repository and branch
-      uses: actions/checkout@v3
-      with:
-        token: ${{ inputs.github_token }}
-        repository: ${{ inputs.parent_repository }}
-        ref: ${{ inputs.parent_branch }}
-        submodules: true
-        fetch-depth: 0
+  - name: Checkout parent repository and branch
+    uses: actions/checkout@v3
+    with:
+      token: ${{ inputs.github_token }}
+      repository: ${{ inputs.parent_repository }}
+      ref: ${{ inputs.parent_branch }}
+      submodules: true
+      fetch-depth: 0
 
-    - name: Set Git user name and email
-      run: |
-        git config user.name "$(git --no-pager show -s --format='%an')"
-        git config user.email "$(git --no-pager show -s --format='%ae')"
-
-    - name: Create new commit and push changes
-      run: |
-        git submodule update --remote
-        git commit -am "updating submodules"
-        git push
+  - name: Create new commit and push changes
+    shell: bash
+    run: |
+      git config user.name "${GITHUB_ACTOR}"
+      git config user.email github-actions@github.com
+      git submodule update --remote
+      git commit -am "updating submodules"
+      git push
