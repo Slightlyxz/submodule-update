@@ -1,5 +1,5 @@
 name: 'GitHub Action Submodule Update (Directcommit)'
-description: 'Update submodules and creates a new commit for parent repository'
+description: 'Update submodules and create a new commit for parent repository'
 author: 'releasehub, PaulRitter'
 
 branding:
@@ -40,7 +40,6 @@ runs:
 
   - name: Create new commit and push changes
     if: steps.check_submodule.outputs.commit_needed == 'true'
-    shell: bash
     run: |
       git config user.name "${GITHUB_ACTOR}"
       git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
