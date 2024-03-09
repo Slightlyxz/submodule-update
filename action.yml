@@ -17,7 +17,7 @@ inputs:
   parent_repository:
     description: 'Parent Repository'
     required: true
-  
+
 runs:
   using: 'composite'
   steps:
@@ -30,11 +30,11 @@ runs:
       submodules: true
       fetch-depth: 0
 
-  - name: Create new commit and push changes
-    shell: bash
+  - name: Update submodules and commit changes
     run: |
       git config user.name "${GITHUB_ACTOR}"
       git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
       git submodule update --remote
-      git commit -am "updating submodules"
+      git submodule foreach 'git commit -am "Update submodule: $(basename $path)" || :'
+      git commit -am "Updating submodules"
       git push
