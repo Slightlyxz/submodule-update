@@ -46,7 +46,7 @@ runs:
           AFTER_HEAD=$(git rev-parse HEAD)
           cd $GITHUB_WORKSPACE
           if [ "$BEFORE_HEAD" != "$AFTER_HEAD" ]; then
-            git commit -am "updated submodule $SUBMODULE"
+            git commit -am "Updated $SUBMODULE"
           fi
         else
           echo "Directory $FULL_PATH does not exist"
