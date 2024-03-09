@@ -1,5 +1,5 @@
 name: 'GitHub Action Submodule Update (Directcommit)'
-description: 'Update submodules and create a new commit for parent repository'
+description: 'Update submodules and creates a new commit for parent repository'
 author: 'releasehub, PaulRitter'
 
 branding:
@@ -30,21 +30,11 @@ runs:
       submodules: true
       fetch-depth: 0
 
-  - name: Check for submodule updates
-    id: check_submodule
-    run: |
-      git submodule update --remote --rebase
-      git diff-index --quiet HEAD || echo "::set-output name=changed::true"
-      git diff --quiet HEAD@{1} HEAD || echo "::set-output name=commit_needed::true"
-      git diff --name-only HEAD@{1} HEAD > submodule_changes.txt || true
-
   - name: Create new commit and push changes
-    if: steps.check_submodule.outputs.commit_needed == 'true'
+    shell: bash
     run: |
       git config user.name "${GITHUB_ACTOR}"
       git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
-      while IFS= read -r line; do
-          submodule=$(basename "$line")
-          git commit -am "Updated submodule: $submodule"
-      done < submodule_changes.txt
+      git submodule update --remote
+      git commit -am "updating submodules"
       git push
