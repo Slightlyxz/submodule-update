@@ -17,7 +17,7 @@ inputs:
   parent_repository:
     description: 'Parent Repository'
     required: true
-
+  
 runs:
   using: 'composite'
   steps:
@@ -32,26 +32,26 @@ runs:
 
   - name: Create new commit and push changes
     shell: bash
-    run: |
-      git config user.name "${GITHUB_ACTOR}"
-      git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
-      SUBMODULES=$(git submodule status | awk '{print $1" "$2}')
-      for SUBMODULE in $SUBMODULES
-      do
-        SUBMODULE_NAME=$(echo $SUBMODULE | awk '{print $1}')
-        SUBMODULE_PATH=$(echo $SUBMODULE | awk '{print $2}')
-        FULL_PATH="${GITHUB_WORKSPACE}/${SUBMODULE_PATH}"
-        if [ -d "$FULL_PATH" ]; then
-          cd $FULL_PATH
-          BEFORE_HEAD=$(git rev-parse HEAD)
-          git pull origin HEAD
-          AFTER_HEAD=$(git rev-parse HEAD)
-          cd $GITHUB_WORKSPACE
-          if [ "$BEFORE_HEAD" != "$AFTER_HEAD" ]; then
-            git commit -am "Updated ${SUBMODULE_NAME}"
-          fi
-        else
-          echo "Directory $FULL_PATH does not exist"
-        fi
-      done
-      git push
+run: |
+  git config user.name "${GITHUB_ACTOR}"
+  git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+  SUBMODULES=$(git submodule status | awk '{print $1" "$2}')
+  for SUBMODULE in $SUBMODULES
+  do
+    SUBMODULE_NAME=$(echo $SUBMODULE | awk '{print $1}')
+    SUBMODULE_PATH=$(echo $SUBMODULE | awk '{print $2}')
+    FULL_PATH="${GITHUB_WORKSPACE}/${SUBMODULE_PATH}"
+    if [ -d "$FULL_PATH" ]; then
+      cd $FULL_PATH
+      BEFORE_HEAD=$(git rev-parse HEAD)
+      git pull origin HEAD
+      AFTER_HEAD=$(git rev-parse HEAD)
+      cd $GITHUB_WORKSPACE
+      if [ "$BEFORE_HEAD" != "$AFTER_HEAD" ]; then
+        git commit -am "Updated ${SUBMODULE_NAME}"
+      fi
+    else
+      echo "Directory $FULL_PATH does not exist"
+    fi
+  done
+  git push
